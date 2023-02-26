@@ -12,12 +12,8 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 with open(os.path.join(os.path.dirname(__file__), "README.md")) as readme:
     README = readme.read()
 
-original_dir = os.getcwd()
-os.chdir(os.path.join(os.path.dirname(__file__), "src"))
+version = open(os.path.join(os.path.dirname(__file__), 'src', 'supersecret', 'VERSION.txt')).read().strip()
 
-version = __import__("supersecret").__version__
-
-os.chdir(original_dir)
 # Parse Requirements
 with open("requirements.txt") as f:
     required = f.read().splitlines()
@@ -28,6 +24,7 @@ setup(
     version=version,
     description='A Python project for parsing and caching secrets from AWS Secrets Manager',
     long_description=README,
+    long_description_content_type='text/markdown',
     author='Greg Doermann',
     author_email='greg@doermann.me',
     packages=find_packages('src/supersecret'),
