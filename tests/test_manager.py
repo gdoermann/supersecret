@@ -272,3 +272,16 @@ class TestSecretManager(unittest.TestCase):
             self.assertEqual(secret_manager.str('test'), 'test')
             self.assertNotEqual(secret_manager.str('username'), 'test_username')
             self.assertEqual(secret_manager.str('username'), 'new_username')
+
+    def test_environment_key_name(self):
+        """
+        Test using SECRET_NAME as the environment variable name to set the key name.
+        """
+        os.environ['SECRET_NAME'] = 'TestingSecret2'
+        try:
+            with patch.object(SecretManager, 'connect') as mock_connect_to_session:
+                mock_connect_to_session.return_value = MockSecretsClient()
+                secret_manager = SecretManager()
+                self.assertEqual(secret_manager.str('password'), 'new_password')
+        finally:
+            del os.environ['SECRET_NAME']

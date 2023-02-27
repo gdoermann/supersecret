@@ -3,6 +3,7 @@ AWS Secrets Parser
 """
 import base64
 import json
+import os
 from collections import OrderedDict
 
 from botocore.exceptions import ClientError
@@ -19,11 +20,16 @@ class SecretParser:
     """
     SERVICE_NAME: str = 'secretsmanager'
 
-    def __init__(self, default_secret_name: str, **aws_kwargs):
+    def __init__(self, default_secret_name: str = None, **aws_kwargs):
         """
         :param secret_name: The AWS Secrets Manager secret name
         :param aws_kwargs: AWS connection kwargs for boto3.client
         """
+        if default_secret_name is None:
+            default_secret_name = os.environ.get('SECRET_NAME', None)
+        if default_secret_name is None:
+            raise KeyError('No secret name provided')
+
         self.client = None
         self.default_secret_name = default_secret_name
         self.aws_kwargs = aws_kwargs
