@@ -23,6 +23,7 @@ setup(
     name='supersecret',
     version=version,
     description='A Python project for parsing and caching secrets from AWS Secrets Manager',
+    url='https://github.com/gdoermann/supersecret',
     long_description=README,
     long_description_content_type='text/markdown',
     author='Greg Doermann',
@@ -30,4 +31,18 @@ setup(
     packages=find_packages('src/supersecret'),
     test_suite='tests',
     install_requires=required,
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Security :: Cryptography',
+        'Topic :: Utilities',
+    ],
+    project_urls={
+        'source': 'https://github.com/gdoermann/supersecret',
+    }
 )
