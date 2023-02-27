@@ -6,6 +6,7 @@ import decimal
 import unittest
 import json
 import uuid
+from collections import OrderedDict
 from unittest.mock import patch
 import os
 
@@ -14,43 +15,78 @@ from botocore.client import BaseClient
 from supersecret.manager import SecretManager
 from supersecret.util import AttrDict
 
-SECRETS_MOCK = {
-    'TestingSecret': {
-        'ARN': 'arn:aws:secretsmanager:us-east-1:123456789:secret:TestingSecret-123456',
-        'Name': 'TestingSecret',
-        'VersionId': '123456',
-        'SecretString': json.dumps({
-            'username': 'test_username',
-            'password': 'test_password',
-            'database__host': 'localhost',
-            'database__port': '1234',
-            'database__name': 'test_database',
-            'database__username': 'test_database_username',
-            'database__password': 'test_database_password',
-            'database__options__ssl': 'True',
-            'test_float': '1.234',
-            'test_int': '1234',
-            'test_bool': 'True',
-            'test_list': 'test1,test2,test3',
-            'test_choices': 'test1:test2,test3:test4',
-            'test_datetime': '2020-01-01 00:00:00',
-            'test_date': '2020-01-01',
-            'test_decimal': '1.234',
-            'test_time': '00:00:00',
-            'test_timedelta': '1:00:00',
-            'test_timedelta_seconds': '3600',
-            'test_uuid': '12345678-1234-5678-1234-567812345678',
-        }),
-        'VersionStages': ['AWSCURRENT'],
-        'CreatedDate': datetime.datetime.now(),
-        'ResponseMetadata': {'RequestId': 'abc123',
-                             'HTTPStatusCode': 200,
-                             'HTTPHeaders': {'x-amzn-requestid': 'abc123',
-                                             'content-type': 'application/x-amz-json-1.1',
-                                             'content-length': '2033',
-                                             'date': 'Sun, 26 Feb 2023 07:44:38 GMT'},
-                             'RetryAttempts': 0}}
-}
+SECRETS_MOCK = OrderedDict()
+SECRETS_MOCK['TestingSecret'] = {
+    'ARN': 'arn:aws:secretsmanager:us-east-1:123456789:secret:TestingSecret-123456',
+    'Name': 'TestingSecret',
+    'VersionId': '123456',
+    'SecretString': json.dumps({
+        'username': 'test_username',
+        'password': 'test_password',
+        'database__host': 'localhost',
+        'database__port': '1234',
+        'database__name': 'test_database',
+        'database__username': 'test_database_username',
+        'database__password': 'test_database_password',
+        'database__options__ssl': 'True',
+        'test_float': '1.234',
+        'test_int': '1234',
+        'test_bool': 'True',
+        'test_list': 'test1,test2,test3',
+        'test_choices': 'test1:test2,test3:test4',
+        'test_datetime': '2020-01-01 00:00:00',
+        'test_date': '2020-01-01',
+        'test_decimal': '1.234',
+        'test_time': '00:00:00',
+        'test_timedelta': '1:00:00',
+        'test_timedelta_seconds': '3600',
+        'test_uuid': '12345678-1234-5678-1234-567812345678',
+    }),
+    'VersionStages': ['AWSCURRENT'],
+    'CreatedDate': datetime.datetime.now(),
+    'ResponseMetadata': {'RequestId': 'abc123',
+                         'HTTPStatusCode': 200,
+                         'HTTPHeaders': {'x-amzn-requestid': 'abc123',
+                                         'content-type': 'application/x-amz-json-1.1',
+                                         'content-length': '2033',
+                                         'date': 'Sun, 26 Feb 2023 07:44:38 GMT'},
+                         'RetryAttempts': 0}}
+
+SECRETS_MOCK['TestingSecret2'] = {
+    'ARN': 'arn:aws:secretsmanager:us-east-1:123456789:secret:TestingSecret-123457',
+    'Name': 'TestingSecret2',
+    'VersionId': '123457',
+    'SecretString': json.dumps({
+        'username': 'new_username',
+        'password': 'new_password',
+        'database__host': 'remote_host',
+        'database__port': '5678',
+        'database__name': 'new_database',
+        'database__username': 'new_username',
+        'database__password': 'new_database_password',
+        'database__options__ssl': 'False',
+        'test_float': '5.678',
+        'test_int': '5678',
+        'test_bool': 'False',
+        'test_list': 'test4,test5,test6',
+        'test_choices': 'test5:test6,test7:test8',
+        'test_datetime': '2020-01-02 00:00:00',
+        'test_date': '2020-01-02',
+        'test_decimal': '5.678',
+        'test_time': '01:00:00',
+        'test_timedelta': '1:01:00',
+        'test_timedelta_seconds': '3660',
+        'test_uuid': '12345678-1234-5678-1234-567812345679',
+    }),
+    'VersionStages': ['AWSCURRENT'],
+    'CreatedDate': datetime.datetime.now(),
+    'ResponseMetadata': {'RequestId': 'abc123',
+                         'HTTPStatusCode': 200,
+                         'HTTPHeaders': {'x-amzn-requestid': 'abc123',
+                                         'content-type': 'application/x-amz-json-1.1',
+                                         'content-length': '2033',
+                                         'date': 'Sun, 26 Feb 2023 07:44:38 GMT'},
+                         'RetryAttempts': 0}}
 
 
 class MockSecretsClient:
@@ -210,15 +246,29 @@ class TestSecretManager(unittest.TestCase):
         Test that the dict method returns the expected value.
         """
         desired_response = AttrDict({
-                'host': 'localhost',
-                'port': '1234',
-                'name': 'test_database',
-                'username': 'test_database_username',
-                'password': 'test_database_password',
-                'options': AttrDict({'ssl': 'True'}),
+            'host': 'localhost',
+            'port': '1234',
+            'name': 'test_database',
+            'username': 'test_database_username',
+            'password': 'test_database_password',
+            'options': AttrDict({'ssl': 'True'}),
         })
         with patch.object(SecretManager, 'connect') as mock_connect_to_session:
             mock_connect_to_session.return_value = MockSecretsClient()
             secret_manager = SecretManager('TestingSecret')
             secret_dict = secret_manager.dict('database')
             self.assertEqual(secret_dict, desired_response)
+
+    def test_multiple_keys(self):
+        """
+        Create a manager with multiple keys and test that the correct value is returned.
+        """
+        first_secret = list(SECRETS_MOCK.keys())[0]
+        last_secret = list(SECRETS_MOCK.keys())[-1]
+        with patch.object(SecretManager, 'connect') as mock_connect_to_session:
+            mock_connect_to_session.return_value = MockSecretsClient()
+            secret_manager = SecretManager(first_secret)
+            secret_manager.load(last_secret)
+            self.assertEqual(secret_manager.str('test'), 'test')
+            self.assertNotEqual(secret_manager.str('username'), 'test_username')
+            self.assertEqual(secret_manager.str('username'), 'new_username')
