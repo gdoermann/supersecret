@@ -31,6 +31,7 @@ class SecretParser:
             raise KeyError('No secret name provided')
 
         self.client = None
+        self.__client_created = False
         self.default_secret_name = default_secret_name
         self.aws_kwargs = aws_kwargs
         self._secrets = OrderedDict()
@@ -45,6 +46,7 @@ class SecretParser:
         import boto3
 
         self.client = boto3.client(self.SERVICE_NAME, **self.aws_kwargs)
+        self.__client_created = True
         return self.client
 
     def load(self, secret_name: str = None, client: BaseClient = None) -> GetValue:
@@ -85,3 +87,21 @@ class SecretParser:
                 del raw_secret['SecretString']
 
             return GetValue(**raw_secret)
+
+    def close(self):
+        try:
+            if self.__client_created and self.client:
+                self.client.close()
+        finally:
+            self.client = None
+            self._secrets = OrderedDict()
+
+    # Context Management
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def __del__(self):
+        self.close()

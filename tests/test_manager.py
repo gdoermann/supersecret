@@ -285,3 +285,17 @@ class TestSecretManager(unittest.TestCase):
                 self.assertEqual(secret_manager.str('password'), 'new_password')
         finally:
             del os.environ['SECRET_NAME']
+
+
+    def test_context_manager_usage(self):
+        """
+        Test that the context manager usage works as expected.
+        We mock the connect method to return a mock secrets client.
+        We are unable to test the client status or close because the method is mocked.
+        We do this test in the actual AWS connection tests.
+        """
+        with patch.object(SecretManager, 'connect') as mock_connect_to_session:
+            mock_connect_to_session.return_value = MockSecretsClient()
+            with SecretManager('TestingSecret') as secret_manager:
+                self.assertEqual(secret_manager.str('username'), 'test_username')
+                self.assertEqual(secret_manager.str('password'), 'test_password')

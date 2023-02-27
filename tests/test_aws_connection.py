@@ -122,3 +122,17 @@ class TestAwsConnections(unittest.TestCase):
         # Should be the value from the last secret
         secret = self.secrets[list(self.secrets.keys())[-1]]
         self.assertEqual(self.secret_manager.int('test_int'), int(secret['test_int']))
+
+    def test_context_manager_usage(self):
+        """
+        Test that the context manager usage works as expected.
+        We mock the connect method to return a mock secrets client.
+        We are unable to test the client status or close because the method is mocked.
+        We do this test in the actual AWS connection tests.
+        """
+        name = list(self.secrets.keys())[0]
+        with SecretManager(name) as secret_manager:
+            self.assertIsNone(secret_manager.client)
+            self.assertEqual(secret_manager.str('username'), 'test_username')
+            self.assertEqual(secret_manager.str('password'), 'test_password')
+            self.assertIsNotNone(secret_manager.client)
