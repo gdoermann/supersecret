@@ -149,7 +149,6 @@ The multi secret manager behaves like a single secret manager, so you can use th
 # Dependencies
 This package requires the following libraries:
 * [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) library to connect to AWS.
-* [requests](https://requests.readthedocs.io/en/master/) library to make HTTP requests.
 * [marshmallow](https://marshmallow.readthedocs.io/en/stable/) library to type cast values.
 
 
