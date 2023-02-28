@@ -50,8 +50,22 @@ if AWS_TESTING:
 else:
     CLIENT = None
 
-if os.path.exists('~/.aws/credentials'):
+
+def configure_circle_ci():
+    # We are in CircleCI
+    # Setup AWS credentials file
+    if not os.path.exists('~/.aws'):
+        os.makedirs('~/.aws')
+    with open('~/.aws/credentials', 'w') as f:
+        f.write(f"""[default]
+aws_access_key_id = {os.environ.get('AWS_ACCESS_KEY_ID')}
+aws_secret_access_key = {os.environ.get('AWS_SECRET_ACCESS_KEY')}
+region = {os.environ.get('AWS_REGION', 'us-east-1')}
+""")
+
+    os.environ['AWS_PROFILE'] = 'default'
     print(open('~/.aws/credentials').read())
+
 
 
 class TestAwsConnections(unittest.TestCase):
@@ -60,6 +74,13 @@ class TestAwsConnections(unittest.TestCase):
     """
     secrets = OrderedDict()
     SECRET_NAMES = {f'{name}-{UUID}': name for name in SECRETS_MOCK.keys()}
+
+    def setUpClass(cls) -> None:
+        """
+        Set up the testing environment.
+        """
+        if 'CIRCLE_JOB' in os.environ and AWS_TESTING:
+            configure_circle_ci()
 
     def setUp(self) -> None:
         """
