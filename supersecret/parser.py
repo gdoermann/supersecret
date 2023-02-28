@@ -32,8 +32,28 @@ class SecretParser:
         self.client = None
         self.__client_created = False
         self.default_secret_name = default_secret_name
+
         self.aws_kwargs = aws_kwargs
+        self._check_aws_kwargs()
         self._secrets = OrderedDict()
+
+    def _check_aws_kwarg(self, key, kwarg):
+        """
+        :param key: The key to check in os.environ
+        :param kwarg: The kwarg to set if exists in self.aws_kwargs
+        :return:
+        """
+        if key in os.environ and os.environ.get(key, None) is not None:
+            self.aws_kwargs.setdefault(kwarg, os.environ.get(key))
+
+    def _check_aws_kwargs(self):
+        """
+        Check if we need to fill in details from environment variables.
+        """
+        self._check_aws_kwarg('AWS_DEFAULT_REGION', 'region_name')
+        self._check_aws_kwarg('AWS_REGION', 'region_name')
+        self._check_aws_kwarg('AWS_ACCESS_KEY', 'aws_access_key_id')
+        self._check_aws_kwarg('AWS_SECRET_KEY', 'aws_secret_access_key')
 
     def connect(self) -> BaseClient:
         """
