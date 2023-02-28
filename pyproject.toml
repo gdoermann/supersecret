@@ -5,10 +5,6 @@ build-backend = 'setuptools.build_meta'
 [tool.black]
 target-version = ['py38']
 
-[tool.pytest.ini_options]
-pythonpath = [
-  ".", "src",
-]
 
 [tool.bumpver]
 current_version = "0.3.0"
@@ -19,14 +15,6 @@ tag = true
 push = false
 
 [tool.bumpver.file_patterns]
-"pyproject.toml" = [
-    'current_version = "{version}"',
-]
-"README.md" = [
-    "{version}",
-    "{pep440_version}",
-]
-"supersecret/__init__.py" = [
-    '__version__ = "{version}"',
-    '__version__ = "{pep440_version}"',
-]
+"pyproject.toml" = ['current_version = "{version}"']
+"setup.cfg" = ['version = {version}']
+"src/reader/__init__.py" = ["{version}"]
