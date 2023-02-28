@@ -13,7 +13,6 @@ from .exceptions import define_error
 from botocore.client import BaseClient
 
 
-
 class SecretParser:
     """
     SecretParser connects to AWS and parses the secret

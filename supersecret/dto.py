@@ -1,6 +1,6 @@
 import dataclasses
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import List, Dict
 from datetime import datetime
 
 from supersecret.util import AttrDict

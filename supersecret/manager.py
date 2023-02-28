@@ -32,7 +32,8 @@ class SecretManager(SecretParser):
     * `decimal`: decimal.Decimal
     * `bool`: Boolean
     * `list`: List - You can specify a `delimiter` and a `subcast` type for list elements
-    * `choices`: List[tuple] - You can specify a `delimiter` and a `subcast` type for list elements. Returns the form: [(key, value), (key, value)]
+    * `choices`: List[tuple] - You can specify a `delimiter` and a `subcast` type for list elements.
+        Returns the form: [(key, value), (key, value)]
     * `datetime`: datetime.datetime - You can specify a `format` for the datetime string
     * `date`: datetime.date - You can specify a `format` for the date string
     * `time`: datetime.time - You can specify a `format` for the time string
@@ -41,7 +42,8 @@ class SecretManager(SecretParser):
     * `uuid`: uuid.UUID - You can specify a `version` for the UUID. 1=Time-based, 3=Name-based, 4=Random, 5=Name-based
     * `log_level`: int - Parses a log level string to an int
     * `path`: pathlib.Path - Parses a string to a pathlib.Path object
-    * `dict`: AttrDict - You can specify a `prefix` for the dictionary keys, a `subcast_keys` type, and a `subcast_values` type
+    * `dict`: AttrDict - You can specify a `prefix` for the dictionary keys, a `subcast_keys` type,
+        and a `subcast_values` type
     """
 
     def value(self, name, default=NotSet) -> str:
@@ -165,7 +167,6 @@ class SecretManager(SecretParser):
         Get the value of a secret as a Path
         """
         return fields.Path().deserialize(self.value(name, default=default))
-
 
     def _parse_dict(self, prefix, dictionary: dict, response_dict: AttrDict = None,
                     subcast_keys: ma.fields.Field = fields.Str,

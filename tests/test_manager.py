@@ -286,7 +286,6 @@ class TestSecretManager(unittest.TestCase):
         finally:
             del os.environ['SECRET_NAME']
 
-
     def test_context_manager_usage(self):
         """
         Test that the context manager usage works as expected.

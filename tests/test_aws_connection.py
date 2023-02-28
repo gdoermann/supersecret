@@ -35,10 +35,10 @@ from collections import OrderedDict
 import boto3
 
 from supersecret.manager import SecretManager
+from .test_manager import SECRETS_MOCK
 
 # Set up the AWS testing environment
 AWS_TESTING = os.environ.get('AWS_TESTING', False)
-from .test_manager import SECRETS_MOCK
 
 UUID = str(uuid.uuid4())
 

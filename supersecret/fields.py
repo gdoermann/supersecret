@@ -8,7 +8,8 @@ Fields:
 * `Decimal`: decimal.Decimal
 * `Bool`: Boolean
 * `List`: List - You can specify a `delimiter` and a `subcast` type for list elements
-* `Choices`: List[tuple] - You can specify a `delimiter` and a `subcast` type for list elements. Returns the form: [(key, value), (key, value)]
+* `Choices`: List[tuple] - You can specify a `delimiter` and a `subcast` type for list elements.
+        Returns the form: [(key, value), (key, value)]
 * `Datetime`: datetime.datetime - You can specify a `format` for the datetime string
 * `Date`: datetime.date - You can specify a `format` for the date string
 * `Time`: datetime.time - You can specify a `format` for the time string
