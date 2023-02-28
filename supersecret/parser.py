@@ -44,6 +44,7 @@ class SecretParser:
         if self.client:
             return self.client
         import boto3
+        self.aws_kwargs.setdefault('region_name', os.environ.get('AWS_REGION', 'us-east-1'))
 
         self.client = boto3.client(self.SERVICE_NAME, **self.aws_kwargs)
         self.__client_created = True
