@@ -54,6 +54,10 @@ else:
 def configure_circle_ci():
     # We are in CircleCI
     # Setup AWS credentials file
+    if os.path.exists('~/.aws/credentials'):
+        print('AWS credentials file already exists')
+        print(open('~/.aws/credentials').read())
+        return
     if not os.path.exists('~/.aws'):
         os.makedirs('~/.aws')
     with open('~/.aws/credentials', 'w') as f:
