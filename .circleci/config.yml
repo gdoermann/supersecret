@@ -4,10 +4,18 @@ version: 2.1
 
 orbs:
   python: circleci/python@2.0.3
+  aws-cli: circleci/aws-cli@2.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  aws-cli-cred-setup:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_ACCESS_SECRET
+          aws-region: AWS_REGION_NAME
   build:
     executor: python/default
     steps:
@@ -33,4 +41,6 @@ jobs:
 workflows:
   main:
     jobs:
+      - aws-cli-cred-setup:
+          context: aws
       - build
