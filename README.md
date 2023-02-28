@@ -1,6 +1,8 @@
 Super Secret Library
 ====================
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/gdoermann/supersecret/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/gdoermann/supersecret/tree/main)
+
 This is a library that does super secret things.  
 
 AWS Secrets Manager is an amazing service that allows you to store secrets in a secure way.  
