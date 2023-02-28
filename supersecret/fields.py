@@ -47,8 +47,6 @@ class Choices(ma.fields.List):
         if isinstance(value, list):
             return value
         subcast = self.inner
-        if isinstance(subcast, type):
-            subcast = subcast()
         return [(v[0], subcast.deserialize(v[1])) for v in [v.split(':') for v in value.split(self.delimiter)]]
 
 
@@ -57,7 +55,7 @@ Date = ma.fields.Date
 Time = ma.fields.Time
 
 
-class TimeDelta(ma.fields.TimeDelta):
+class TimeDelta(ma.fields.Str):
     """
     A field that parses a string to a datetime.timedelta object.
     """
@@ -65,7 +63,8 @@ class TimeDelta(ma.fields.TimeDelta):
         if isinstance(value, datetime.timedelta):
             return value
         ret = super()._deserialize(value, *args, **kwargs)
-        return datetime.timedelta(**ret)
+        hours, minutes, seconds = ret.split(':')
+        return datetime.timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds))
 
 
 TimeDeltaSeconds = ma.fields.TimeDelta
