@@ -4,6 +4,14 @@ branch = True
 omit =
     */tests/*
     */test_*.py
+    */site-packages/*
+    */dist-packages/*
+    */dist/*
+    */.github/*
+    */.tox/*
+    */.eggs/*
+    */.venv/*
+    */.env/*
 
 [report]
 # Regexes for lines to exclude from consideration
