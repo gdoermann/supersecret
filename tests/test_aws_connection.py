@@ -79,6 +79,7 @@ class TestAwsConnections(unittest.TestCase):
     secrets = OrderedDict()
     SECRET_NAMES = {f'{name}-{UUID}': name for name in SECRETS_MOCK.keys()}
 
+    @classmethod
     def setUpClass(cls) -> None:
         """
         Set up the testing environment.
