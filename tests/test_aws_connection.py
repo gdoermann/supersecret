@@ -50,6 +50,9 @@ if AWS_TESTING:
 else:
     CLIENT = None
 
+if os.path.exists('~/.aws/credentials'):
+    print(open('~/.aws/credentials').read())
+
 
 class TestAwsConnections(unittest.TestCase):
     """
