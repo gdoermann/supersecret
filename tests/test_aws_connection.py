@@ -79,20 +79,15 @@ class TestAwsConnections(unittest.TestCase):
     secrets = OrderedDict()
     SECRET_NAMES = {f'{name}-{UUID}': name for name in SECRETS_MOCK.keys()}
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        """
-        Set up the testing environment.
-        """
-        if 'CIRCLECI' in os.environ and AWS_TESTING:
-            configure_circle_ci()
-
     def setUp(self) -> None:
         """
         Set up the testing environment.
         """
         if not AWS_TESTING:
             self.skipTest('AWS_TESTING not set to True')
+        if 'CIRCLECI' in os.environ:
+            configure_circle_ci()
+
         if not self.secrets:
             self.create_secrets()
 
