@@ -13,7 +13,6 @@ from .exceptions import define_error
 from botocore.client import BaseClient
 
 
-
 class SecretParser:
     """
     SecretParser connects to AWS and parses the secret
@@ -33,6 +32,7 @@ class SecretParser:
         self.client = None
         self.__client_created = False
         self.default_secret_name = default_secret_name
+
         self.aws_kwargs = aws_kwargs
         self._secrets = OrderedDict()
 
@@ -44,6 +44,7 @@ class SecretParser:
         if self.client:
             return self.client
         import boto3
+        self.aws_kwargs.setdefault('region_name', os.environ.get('AWS_REGION', 'us-east-1'))
 
         self.client = boto3.client(self.SERVICE_NAME, **self.aws_kwargs)
         self.__client_created = True
@@ -72,7 +73,8 @@ class SecretParser:
             )
         except ClientError as error:
             error_code = error.response['Error']['Code']
-            define_error(error_code)
+            err = define_error(error_code)
+            str(error)
             raise error
 
         else:

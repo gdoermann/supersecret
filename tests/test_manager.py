@@ -116,6 +116,12 @@ class TestSecretManager(unittest.TestCase):
             secret_manager = SecretManager('TestingSecret')
             self.assertEqual(secret_manager.str('test'), 'test')
 
+            secret = next(iter(secret_manager._secrets.values()))
+            self.assertEqual(secret.SecretValues.username, 'test_username')
+            self.assertEqual(secret.SecretValues['username'], 'test_username')
+
+            self.assertRaises(KeyError, getattr, secret.SecretValues, 'does_not_exist')
+
     def test_connect_to_session(self):
         """
         Test that the connect_to_session method returns the expected value.
@@ -285,7 +291,6 @@ class TestSecretManager(unittest.TestCase):
                 self.assertEqual(secret_manager.str('password'), 'new_password')
         finally:
             del os.environ['SECRET_NAME']
-
 
     def test_context_manager_usage(self):
         """

@@ -1,7 +1,7 @@
 # Version of the supersecret library
 import os
 
-__version__ = open(os.path.join(os.path.dirname(__file__), 'VERSION.txt')).read().strip()
+__version__ = "1.0.0"
 
 
 def get_version():

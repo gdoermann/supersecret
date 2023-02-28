@@ -33,18 +33,20 @@ import uuid
 from collections import OrderedDict
 
 import boto3
+from botocore.exceptions import ClientError
 
+from supersecret.exceptions import BaseSecretsManagerException
 from supersecret.manager import SecretManager
+from .test_manager import SECRETS_MOCK
 
 # Set up the AWS testing environment
-AWS_TESTING = os.environ.get('AWS_TESTING', False)
-from .test_manager import SECRETS_MOCK
+AWS_TESTING = bool(os.environ.get('AWS_TESTING', False))
 
 UUID = str(uuid.uuid4())
 
 if AWS_TESTING:
     # Setup AWS Connection
-    CLIENT = boto3.client('secretsmanager')
+    CLIENT = boto3.client('secretsmanager', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
 else:
     CLIENT = None
 
@@ -62,6 +64,7 @@ class TestAwsConnections(unittest.TestCase):
         """
         if not AWS_TESTING:
             self.skipTest('AWS_TESTING not set to True')
+
         if not self.secrets:
             self.create_secrets()
 
@@ -99,6 +102,14 @@ class TestAwsConnections(unittest.TestCase):
         """
         for secret_name in cls.SECRET_NAMES.keys():
             CLIENT.delete_secret(SecretId=secret_name, ForceDeleteWithoutRecovery=True)
+
+    def test_exceptions(self):
+        """
+        Test that the exceptions are raised as expected.
+        """
+        os.environ['test'] = 'test'
+
+        self.assertRaises(ClientError, self.secret_manager.load, 'does_not_exist')
 
     def test_get_value_env(self):
         """

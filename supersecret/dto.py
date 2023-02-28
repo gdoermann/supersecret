@@ -1,6 +1,6 @@
 import dataclasses
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import List, Dict
 from datetime import datetime
 
 from supersecret.util import AttrDict
@@ -46,6 +46,8 @@ class SecretValues:
         [setattr(self, k, v) for k, v in self.data.items()]
 
     def __getattr__(self, item):
+        if item in self.data:
+            return self.data[item]
         raise KeyError(f'Key "{item}" is not found.')
 
     def __getitem__(self, item):

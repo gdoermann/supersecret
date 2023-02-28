@@ -9,46 +9,40 @@ def define_error(response_error):
                 return obj
 
 
-class DecryptionFailureException(Exception):
+class BaseSecretsManagerException(Exception):
+    """
+    Base exception for all Secrets Manager exceptions
+    """
+
+    def __str__(self):
+        return self.__doc__
+
+
+class DecryptionFailureException(BaseSecretsManagerException):
     """
     Secrets Manager can't decrypt the protected secret text using the provided KMS key.
     """
 
-    def __str__(self):
-        return self.__doc__
 
-
-class InternalServiceErrorException(Exception):
+class InternalServiceErrorException(BaseSecretsManagerException):
     """
     An error occurred on the server side.
     """
 
-    def __str__(self):
-        return self.__doc__
 
-
-class InvalidParameterException(Exception):
+class InvalidParameterException(BaseSecretsManagerException):
     """
     You provided an invalid value for a parameter.Deal with the exception here, and/or rethrow at your discretion.
     """
 
-    def __str__(self):
-        return self.__doc__
 
-
-class InvalidRequestException(Exception):
+class InvalidRequestException(BaseSecretsManagerException):
     """
     You provided a parameter value that is not valid for the current state of the resource.
     """
 
-    def __str__(self):
-        return self.__doc__
 
-
-class ResourceNotFoundException(Exception):
+class ResourceNotFoundException(BaseSecretsManagerException):
     """
     We can't find the resource that you asked for. Deal with the exception here, and/or rethrow at your discretion.
     """
-
-    def __str__(self):
-        return self.__doc__

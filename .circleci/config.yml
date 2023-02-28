@@ -1,0 +1,59 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+orbs:
+  python: circleci/python@2.0.3
+  aws-cli: circleci/aws-cli@2.0
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  aws-cli-cred-setup:
+    executor: aws-cli/default
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_ACCESS_SECRET
+          aws-region: AWS_REGION_NAME
+  build:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - python/install-packages:
+          pkg-manager: pip
+          args: '.[extras]'
+      - python/install-packages:
+          args: pytest
+          pkg-manager: pip
+          pypi-cache: false
+      - run:
+          command: |
+            tox
+          name: Test
+          environment:
+            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY
+            AWS_SECRET_ACCESS_KEY: $AWS_ACCESS_SECRET
+            AWS_REGION_NAME: $AWS_REGION_NAME
+            AWS_DEFAULT_REGION: $AWS_REGION_NAME
+      - run:
+          command: |
+            coverage run -m pytest
+            coverage report
+          name: Coverage
+          environment:
+            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY
+            AWS_SECRET_ACCESS_KEY: $AWS_ACCESS_SECRET
+            AWS_REGION_NAME: $AWS_REGION_NAME
+            AWS_DEFAULT_REGION: $AWS_REGION_NAME
+workflows:
+  main:
+    jobs:
+      - aws-cli-cred-setup:
+          context: aws
+      - build:
+            requires:
+                - aws-cli-cred-setup
+            context: aws

@@ -8,7 +8,8 @@ Fields:
 * `Decimal`: decimal.Decimal
 * `Bool`: Boolean
 * `List`: List - You can specify a `delimiter` and a `subcast` type for list elements
-* `Choices`: List[tuple] - You can specify a `delimiter` and a `subcast` type for list elements. Returns the form: [(key, value), (key, value)]
+* `Choices`: List[tuple] - You can specify a `delimiter` and a `subcast` type for list elements.
+        Returns the form: [(key, value), (key, value)]
 * `Datetime`: datetime.datetime - You can specify a `format` for the datetime string
 * `Date`: datetime.date - You can specify a `format` for the date string
 * `Time`: datetime.time - You can specify a `format` for the time string
@@ -45,8 +46,8 @@ class Choices(ma.fields.List):
     def _deserialize(self, value, *args, **kwargs) -> list:
         if isinstance(value, list):
             return value
-        ret = super()._deserialize(value, *args, **kwargs)
-        return [tuple(x.split(':', 1)) for x in ret.split(self.delimiter)]
+        subcast = self.inner
+        return [(v[0], subcast.deserialize(v[1])) for v in [v.split(':') for v in value.split(self.delimiter)]]
 
 
 Datetime = ma.fields.DateTime
@@ -54,7 +55,7 @@ Date = ma.fields.Date
 Time = ma.fields.Time
 
 
-class TimeDelta(ma.fields.TimeDelta):
+class TimeDelta(ma.fields.Str):
     """
     A field that parses a string to a datetime.timedelta object.
     """
@@ -62,7 +63,8 @@ class TimeDelta(ma.fields.TimeDelta):
         if isinstance(value, datetime.timedelta):
             return value
         ret = super()._deserialize(value, *args, **kwargs)
-        return datetime.timedelta(**ret)
+        hours, minutes, seconds = ret.split(':')
+        return datetime.timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds))
 
 
 TimeDeltaSeconds = ma.fields.TimeDelta
