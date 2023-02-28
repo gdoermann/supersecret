@@ -51,27 +51,6 @@ else:
     CLIENT = None
 
 
-def configure_circle_ci():
-    # We are in CircleCI
-    # Setup AWS credentials file
-    if os.path.exists('~/.aws/credentials'):
-        print('AWS credentials file already exists')
-        print(open('~/.aws/credentials').read())
-        return
-    if not os.path.exists('~/.aws'):
-        os.makedirs('~/.aws')
-    with open('~/.aws/credentials', 'w') as f:
-        f.write(f"""[default]
-aws_access_key_id = {os.environ.get('AWS_ACCESS_KEY_ID')}
-aws_secret_access_key = {os.environ.get('AWS_SECRET_ACCESS_KEY')}
-region = {os.environ.get('AWS_REGION', 'us-east-1')}
-""")
-
-    os.environ['AWS_PROFILE'] = 'default'
-    print(open('~/.aws/credentials').read())
-
-
-
 class TestAwsConnections(unittest.TestCase):
     """
     Tests for the SecretManager class.
@@ -85,8 +64,6 @@ class TestAwsConnections(unittest.TestCase):
         """
         if not AWS_TESTING:
             self.skipTest('AWS_TESTING not set to True')
-        if 'CIRCLECI' in os.environ:
-            configure_circle_ci()
 
         if not self.secrets:
             self.create_secrets()
