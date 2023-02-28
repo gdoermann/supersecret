@@ -25,6 +25,11 @@ jobs:
           command: |
             tox
           name: Test
+      - run:
+          command: |
+            coverage run -m pytest
+            coverage report
+          name: Coverage
 workflows:
   main:
     jobs:
