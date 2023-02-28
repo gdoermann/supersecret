@@ -72,7 +72,8 @@ class SecretParser:
             )
         except ClientError as error:
             error_code = error.response['Error']['Code']
-            define_error(error_code)
+            err = define_error(error_code)
+            str(error)
             raise error
 
         else:

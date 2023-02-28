@@ -33,7 +33,9 @@ import uuid
 from collections import OrderedDict
 
 import boto3
+from botocore.exceptions import ClientError
 
+from supersecret.exceptions import BaseSecretsManagerException
 from supersecret.manager import SecretManager
 from .test_manager import SECRETS_MOCK
 
@@ -99,6 +101,14 @@ class TestAwsConnections(unittest.TestCase):
         """
         for secret_name in cls.SECRET_NAMES.keys():
             CLIENT.delete_secret(SecretId=secret_name, ForceDeleteWithoutRecovery=True)
+
+    def test_exceptions(self):
+        """
+        Test that the exceptions are raised as expected.
+        """
+        os.environ['test'] = 'test'
+
+        self.assertRaises(ClientError, self.secret_manager.load, 'does_not_exist')
 
     def test_get_value_env(self):
         """

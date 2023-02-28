@@ -113,10 +113,7 @@ class SecretManager(SecretParser):
         """
         Get the value of a secret as a list of tuples
         """
-        if isinstance(subcast, type):
-            subcast = subcast()
-        return [(v[0], subcast.deserialize(v[1])) for v in [v.split(':') for v in
-                                                            self.value(name, default=default).split(delimiter)]]
+        return fields.Choices(delimiter=delimiter, subcast=subcast).deserialize(self.value(name, default=default))
 
     def datetime(self, name, format='%Y-%m-%d %H:%M:%S', default: (str, NotSet) = NotSet) -> datetime:
         """

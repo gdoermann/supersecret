@@ -46,8 +46,10 @@ class Choices(ma.fields.List):
     def _deserialize(self, value, *args, **kwargs) -> list:
         if isinstance(value, list):
             return value
-        ret = super()._deserialize(value, *args, **kwargs)
-        return [tuple(x.split(':', 1)) for x in ret.split(self.delimiter)]
+        subcast = self.inner
+        if isinstance(subcast, type):
+            subcast = subcast()
+        return [(v[0], subcast.deserialize(v[1])) for v in [v.split(':') for v in value.split(self.delimiter)]]
 
 
 Datetime = ma.fields.DateTime
