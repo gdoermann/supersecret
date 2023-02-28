@@ -16,7 +16,7 @@ jobs:
           pkg-manager: pip
       - python/install-packages:
           pkg-manager: pip
-          args: [extra]
+          args: '.[extra]'
       - python/install-packages:
           args: pytest
           pkg-manager: pip
