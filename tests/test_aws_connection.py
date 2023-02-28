@@ -46,7 +46,7 @@ UUID = str(uuid.uuid4())
 
 if AWS_TESTING:
     # Setup AWS Connection
-    CLIENT = boto3.client('secretsmanager')
+    CLIENT = boto3.client('secretsmanager', region_name=os.environ.get('AWS_REGION', 'us-east-1'))
 else:
     CLIENT = None
 
