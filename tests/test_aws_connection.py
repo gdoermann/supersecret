@@ -40,7 +40,7 @@ from supersecret.manager import SecretManager
 from .test_manager import SECRETS_MOCK
 
 # Set up the AWS testing environment
-AWS_TESTING = os.environ.get('AWS_TESTING', False)
+AWS_TESTING = bool(os.environ.get('AWS_TESTING', False))
 
 UUID = str(uuid.uuid4())
 
@@ -83,7 +83,7 @@ class TestAwsConnections(unittest.TestCase):
         """
         Set up the testing environment.
         """
-        if 'CIRCLE_JOB' in os.environ and AWS_TESTING:
+        if 'CIRCLECI' in os.environ and AWS_TESTING:
             configure_circle_ci()
 
     def setUp(self) -> None:
