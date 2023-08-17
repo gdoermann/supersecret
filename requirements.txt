@@ -1,4 +1,4 @@
 # pw_lambda_lib
-botocore~=1.29
-boto3~=1.26
-marshmallow~=3.19.0
+botocore>=1.29
+boto3>=1.26
+marshmallow>=3.19.0
