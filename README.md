@@ -1,9 +1,8 @@
 Super Secret Library
 ====================
+A simple library for managing tiered AWS Secrets, parsing secret types, and merging secrets with envrionment variables. 
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/gdoermann/supersecret/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/gdoermann/supersecret/tree/main)
-
-This is a library that does super secret things.  
 
 AWS Secrets Manager is an amazing service that allows you to store secrets in a secure way.  
 This package will allow you to load the secrets from AWS Secrets Manager.
