@@ -17,7 +17,7 @@ jobs:
           aws_secret_access_key: AWS_ACCESS_SECRET
           region: AWS_REGION_NAME
   build:
-    executor: python/default
+    executor: python/3.10
     steps:
       - checkout
       - python/install-packages:
