@@ -2,7 +2,6 @@
 AWS Secrets Manager
 """
 import datetime
-import os
 import uuid
 from decimal import Decimal
 from pathlib import Path
@@ -59,10 +58,10 @@ class SecretManager(SecretParser):
             except KeyError:
                 pass
         # Try to get value from environment variables
-        if name in os.environ:
-            return os.environ[name]
-        elif name.upper() in os.environ:
-            return os.environ[name.upper()]
+        if name in self.env:
+            return self.env[name]
+        elif name.upper() in self.env:
+            return self.env[name.upper()]
 
         if default is not NotSet:
             return default
@@ -240,6 +239,6 @@ class SecretManager(SecretParser):
                                              subcast_keys, subcast_values))
 
         # Load all environment variables that begin with prefix
-        response.update(self._parse_dict(filter_prefix, os.environ, response, subcast_keys, subcast_values))
+        response.update(self._parse_dict(filter_prefix, self.env, response, subcast_keys, subcast_values))
 
         return response
