@@ -18,7 +18,10 @@ jobs:
           region: AWS_REGION_NAME
   build:
     executor: python/default
-    version: 3.10
+    parameters:
+      version:
+        type: string
+        default: 3.10
     steps:
       - checkout
       - python/install-packages:
