@@ -40,7 +40,7 @@ export SECRET_NAME=Dev_Secret
 Now you can use the library to parse the secret values:
 
 ```python
-from supersecret.manager import SecretManager
+from supersecret import SecretManager
 from supersecret import fields
 
 secret_manager = SecretManager("SECRET_NAME", region_name="us-east-1") # `region` is optional
