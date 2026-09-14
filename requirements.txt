@@ -1,5 +1,5 @@
 # pw_lambda_lib
 botocore>=1.29
 boto3>=1.26
-marshmallow>=3.26.2,<4
+marshmallow>=4.3.1,<5
 urllib3>=2.6.3,<3 # not directly required, pinned by Snyk to avoid a vulnerability
